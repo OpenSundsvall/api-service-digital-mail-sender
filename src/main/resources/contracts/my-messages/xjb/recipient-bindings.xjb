@@ -1,0 +1,12 @@
+<!-- Bindings file to add @XmlRootElement to generated classes. "<xjc:simple/>" is the magic word -->
+<jaxb:bindings
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+        xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+        jaxb:version="2.1"
+        jaxb:extensionBindingPrefixes="annox xjc">
+
+    <jaxb:globalBindings>
+        <xjc:simple/>
+    </jaxb:globalBindings>
+
+</jaxb:bindings>

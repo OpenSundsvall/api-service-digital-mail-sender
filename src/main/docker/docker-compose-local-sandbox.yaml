@@ -1,0 +1,66 @@
+version: '3'
+services:
+  digitalmailsender:
+    network_mode: bridge
+    container_name: 'ms-digitalmailsender-local-sandbox'
+    image: 'evil.sundsvall.se/ms-digitalmailsender:latest'
+    depends_on:
+      - digitalmailsender-wiremock
+      - digitalmailsender-vnu
+      - digitalmailsender-w3c
+    links:
+      - digitalmailsender-wiremock:wiremock
+      - digitalmailsender-vnu:vnu
+      - digitalmailsender-w3c:w3c
+    build:
+      context: .
+    ports:
+      - '8740:8080'
+    environment:
+      - TZ=Europe/Stockholm
+      - "JAVA_OPTS=$JAVA_OPTS -Xmx256m -Xms128m"
+      #Spring profile
+      - spring_profiles_active=sandbox
+
+      #Skatteverket properties
+      - integration_skatteverket_notification_url=http://wiremock:8080/skatteverket
+      - integration_skatteverket_recipient_url=http://wiremock:8080/skatteverket
+      - integration_skatteverket_key_store_password=changeit
+      - integration_skatteverket_key_store_location=classpath:keystore-sandbox.p12
+
+      #citizenmapping properties
+      - integration_citizenmapping_api_url=http://wiremock:8080/citizenmapping/
+      - integration_citizenmapping_oauth2_token-url=http://wiremock:8080/token
+      - integration_citizenmapping_oauth2_client-id=changeit
+      - integration_citizenmapping_oauth2_client-secret=changeit
+
+      #W3C
+      - integration_w3cvalidator_url=http://w3c/nu/?out=json
+
+  digitalmailsender-wiremock:
+    network_mode: bridge
+    image: wiremock/wiremock:2.32.0
+    restart: always
+    expose:
+      - '8080'
+    volumes:
+      - $PWD/src/test/resources/wiremock:/home/wiremock
+    environment:
+      - TZ=Europe/Stockholm
+
+  digitalmailsender-vnu:
+    network_mode: bridge
+    image: ghcr.io/validator/validator:latest
+    environment:
+      - TZ=Europe/Stockholm
+
+  digitalmailsender-w3c:
+    network_mode: bridge
+    image: ghcr.io/netresearch/validator-w3c
+    ports:
+      - "8090:80"
+    links:
+      #Needs to have this name, otherwise it won't find the "vnu".
+      - digitalmailsender-vnu:vnu
+    environment:
+      - TZ=Europe/Stockholm

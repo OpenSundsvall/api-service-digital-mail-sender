@@ -1,0 +1,39 @@
+version: '3'
+services:
+  digitalmailsender:
+    container_name: 'ms-digitalmail-sender-local-sandbox'
+    image: 'ms-digitalmailsender:latest'
+    restart: always
+    depends_on:
+      - digital-mail-sender-wiremock
+    links:
+      - digital-mail-sender-wiremock:wiremock
+    build:
+      context: .
+    ports:
+      - '8729:8080'
+    environment:
+      #Spring profile
+      - spring_profiles_active=sandbox
+
+      #Skatteverket properties
+      - integration_skatteverket_notification_endpoint_url=http://wiremock:8080/skatteverket
+      - integration_skatteverket_recipient_endpoint_url=http://wiremock:8080/skatteverket
+
+      #citizenmapping properties
+      - integration_citizenmapping_api_url=http://wiremock:8080/citizenmapping/
+      - integration_citizenmapping_oauth2_token-url=http://wiremock:8080/token
+      - integration_citizenmapping_oauth2_client-id=changeit
+      - integration_citizenmapping_oauth2_client-secret=changeit
+
+      #keystore
+      - integration_skatteverket_ssl_key-store-password=changeit
+
+  digital-mail-sender-wiremock:
+    #network_mode: bridge
+    image: wiremock/wiremock:2.32.0
+    restart: always
+    expose:
+      - '8080'
+    volumes:
+      - $PWD/src/test/resources/sandbox/wiremock:/home/wiremock

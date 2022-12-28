@@ -1,0 +1,36 @@
+{
+  "request": {
+    "bodyPatterns": [
+      {
+        "matchesXPath": "//*[ns17:isReachable]//*[ns17:recipientId='190101010159']",
+        "xPathNamespaces": {
+          "ns17": "http://minameddelanden.gov.se/schema/Recipient/v3"
+        }
+      }
+    ],
+    "method": "POST",
+    "url": "/recipient"
+  },
+  "response": {
+    "body": "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <S:Body>\n        <ns1:isReachableResponse xmlns:ns1=\"http://minameddelanden.gov.se/schema/Recipient/v3\" xmlns:ns3=\"http://minameddelanden.gov.se/schema/Authority\"\n                                 xmlns:ns15=\"http://minameddelanden.gov.se/schema/Recipient\" xmlns:ns4=\"http://minameddelanden.gov.se/schema/Common\"\n                                 xmlns:ns17=\"http://minameddelanden.gov.se/schema/Sender\">\n            <ns1:return>\n                <ns15:AccountStatus>\n                    <ns15:RecipientId>190101010159</ns15:RecipientId>\n                    <ns15:Type>Secure</ns15:Type>\n                    <ns15:Pending>false</ns15:Pending>\n                    <ns15:ServiceSupplier>\n                        <ns15:Id>165568402266</ns15:Id>\n                        <ns15:Name>Kivra</ns15:Name>\n                        <ns15:ServiceAdress>https://mm.kivra.com/service/v3</ns15:ServiceAdress>\n                        <ns15:UIAdress>https://www.kivra.com</ns15:UIAdress>\n                        <ns15:InternalServiceAdress/>\n                    </ns15:ServiceSupplier>\n                    <ns15:LastRegistration>2016-10-30T15:38:49.517+01:00</ns15:LastRegistration>\n                </ns15:AccountStatus>\n                <ns15:SenderAccepted>true</ns15:SenderAccepted>\n            </ns1:return>\n        </ns1:isReachableResponse>\n    </S:Body>\n</S:Envelope>",
+    "transformers": ["response-template"],
+    "headers": {
+      "Connection": [
+        "keep-alive"
+      ],
+      "Content-Type": [
+        "text/xml;charset=UTF-8"
+      ],
+      "Keep-Alive": [
+        "timeout=60"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Content-Encoding": [
+        ""
+      ]
+    },
+    "status": 200
+  }
+}
